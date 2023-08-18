@@ -21,19 +21,21 @@ export default function App({$target}) {
         }
     ]
 
+
+    let lastId = initData[initData.length - 1].id;
+
     const onSubmit = (text) => {
        const nextState = todoList.state.concat(
         [
             {
-                id: 4,
+                id: lastId + 1,
                 text,
                 checked: false
             }
         ]
        )
-
-
        todoList.setState(nextState);
+       lastId++;
        console.log(todoList.state);
     }
 
@@ -42,10 +44,17 @@ export default function App({$target}) {
         todoList.setState(nextState)
     }
 
+    const onToggle = (id) => {
+        const nextState = todoList.state.map(todo =>             
+            todo.id === id ? {...todo, checked: !todo.checked} : todo
+        )
+        todoList.setState(nextState)
+    }
+
     new Header({$target});
 
     new TodoForm({$target, onSubmit});
  
     
-    const todoList = new TodoList({$target, initData, onDelete});
+    const todoList = new TodoList({$target, initData, onDelete, onToggle});
 }

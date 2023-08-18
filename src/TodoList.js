@@ -1,4 +1,4 @@
-export default function TodoList({$target, initData, onDelete}) {
+export default function TodoList({$target, initData, onDelete, onToggle}) {
     const $list = document.createElement('div');
     $target.appendChild($list);
 
@@ -8,10 +8,14 @@ export default function TodoList({$target, initData, onDelete}) {
         this.state = nextState;
         this.render();
     }
+
     $list.addEventListener('click', e => {
         if (e.target.classList.contains('del_btn')) {
             const id = parseInt(e.target.getAttribute('data-id'))
             onDelete(id)
+        } else if (e.target.classList.contains('toggle_checkbox')) {
+            const id = parseInt(e.target.getAttribute('data-id'))
+            onToggle(id)
         }
     })
 
@@ -19,7 +23,8 @@ export default function TodoList({$target, initData, onDelete}) {
         $list.innerHTML = `
         <ul>
             ${this.state.map(todo => `
-            <li>
+            <li style="text-decoration: ${todo.checked ? 'line-through' : 'none'}">
+                <input data-id=${todo.id} ${todo.checked ? 'checked' : ''} type=checkbox class="toggle_checkbox" />
                 ${todo.id}
                 <span>${todo.text}</span>
                 <button data-id=${todo.id} class="del_btn">X</button>
